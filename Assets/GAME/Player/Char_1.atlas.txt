@@ -1,0 +1,76 @@
+Char_1.png
+size:2016,1424
+filter:Linear,Linear
+pma:true
+arm 1
+bounds:183,2,80,87
+offsets:1,1,82,89
+arm 2
+bounds:2,13,39,75
+offsets:3,3,47,84
+rotate:90
+arm_robot
+bounds:1889,120,112,190
+blue gun
+bounds:2,91,542,249
+offsets:2,2,546,252
+body
+bounds:1517,42,197,273
+rotate:90
+finger 1
+bounds:480,24,55,65
+offsets:1,1,57,68
+finger 2
+bounds:427,12,77,51
+offsets:1,2,79,54
+rotate:90
+finger 3
+bounds:363,24,65,62
+offsets:2,2,68,65
+rotate:90
+foot 1
+bounds:1792,16,102,123
+rotate:90
+foot 2
+bounds:265,34,96,55
+offsets:1,2,98,58
+hand 1
+bounds:1889,312,178,122
+offsets:1,1,180,124
+rotate:90
+hand 2
+bounds:1345,4,170,114
+offsets:1,0,177,117
+head
+bounds:934,54,436,409
+offsets:1,8,439,419
+rotate:90
+joint 1
+bounds:546,193,147,373
+offsets:1,1,149,376
+rotate:90
+joint 2
+bounds:546,61,130,229
+offsets:1,1,132,232
+rotate:90
+leg 2
+bounds:79,6,83,102
+offsets:1,1,85,104
+rotate:90
+like
+bounds:2,342,1080,930
+offsets:1,4,1082,935
+rotate:90
+red gun
+bounds:1345,241,542,249
+offsets:2,2,546,252
+rip
+bounds:934,492,1080,930
+offsets:1,4,1082,935
+robot_hand
+bounds:777,43,148,148
+offsets:1,2,150,151
+tay cam
+bounds:1345,135,104,123
+offsets:1,1,106,125
+rotate:90
