@@ -31,14 +31,14 @@ public abstract class BasePlayerController : MonoBehaviour
     public virtual void StartMovingLeft()
     {
         _playerMove.isMovingLeft = true;
-        _playerComponent._skeletonAnimation.skeleton.ScaleX = -1f; // Quay Player về phía trái
-        _playerComponent._skeletonAnimation.AnimationName = "walk";
+        _playerComponent._skeletonAnimation.skeleton.ScaleX = 1f; // Quay Player về phía trái
+        _playerComponent._skeletonAnimation.AnimationName = "Run";
     }
 
     public virtual void StopMovingLeft()
     {
         _playerMove.isMovingLeft = false;
-        _playerComponent._skeletonAnimation.AnimationName = "idle";
+        _playerComponent._skeletonAnimation.AnimationName = "Idle_1";
         if (_playerComponent._rigidbody.velocity != Vector2.zero && PlayerController.Instance._playerJump.isCheckGround)
         {
             _playerComponent._rigidbody.velocity = Vector2.zero;
@@ -48,14 +48,14 @@ public abstract class BasePlayerController : MonoBehaviour
     public virtual void StartMovingRight()
     {
         _playerMove.isMovingRight = true;
-        _playerComponent._skeletonAnimation.skeleton.ScaleX = 1f; // Quay Player về phía phải
-        _playerComponent._skeletonAnimation.AnimationName = "walk";
+        _playerComponent._skeletonAnimation.skeleton.ScaleX = -1f; // Quay Player về phía phải
+        _playerComponent._skeletonAnimation.AnimationName = "Run";
     }
 
     public virtual void StopMovingRight()
     {
         _playerMove.isMovingRight = false;
-        _playerComponent._skeletonAnimation.AnimationName = "idle";
+        _playerComponent._skeletonAnimation.AnimationName = "Idle_1";
 
         if (_playerComponent._rigidbody.velocity != Vector2.zero&& PlayerController.Instance._playerJump.isCheckGround)
         {
