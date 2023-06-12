@@ -39,7 +39,7 @@ public abstract class BasePlayerController : MonoBehaviour
     {
         _playerMove.isMovingLeft = false;
         _playerComponent._skeletonAnimation.AnimationName = "Idle_1";
-        if (_playerComponent._rigidbody.velocity != Vector2.zero && PlayerController.Instance._playerJump.isCheckGround)
+        if (_playerComponent._rigidbody.velocity != Vector2.zero && PlayerController.Instance.playerCheckGround.isCheckGround)
         {
             _playerComponent._rigidbody.velocity = Vector2.zero;
         }
@@ -57,7 +57,7 @@ public abstract class BasePlayerController : MonoBehaviour
         _playerMove.isMovingRight = false;
         _playerComponent._skeletonAnimation.AnimationName = "Idle_1";
 
-        if (_playerComponent._rigidbody.velocity != Vector2.zero&& PlayerController.Instance._playerJump.isCheckGround)
+        if (_playerComponent._rigidbody.velocity != Vector2.zero&& PlayerController.Instance.playerCheckGround.isCheckGround)
         {
             _playerComponent._rigidbody.velocity = Vector2.zero;
         }

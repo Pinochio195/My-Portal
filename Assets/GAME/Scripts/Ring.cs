@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Spine;
 using Spine.Unity;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -32,11 +33,25 @@ namespace Ring
         public bool isMovingRight = false;
     }
     [Serializable]
-    public class Player_Jump
+    public class Player_CheckGround
     {
-        public Transform groundCheckTransform; // Đối tượng Transform để chỉ định vị trí bắt đầu của tia
-        public float rayDistance = 3f; // Khoảng cách tia bắn xuống dưới
         public bool isCheckGround;
+    }
+    [Serializable]
+    public class Player_Spine
+    {
+        [SpineBone(dataField: "skeletonAnimation")]
+        public string _boneName;
+        public Bone _bone;
+    }
+    [Serializable]
+    public class Player_Fire
+    {
+        [HideInInspector]public GameObject _ballFireGameObject;
+        public GameObject _prefabs_Blue_BallFire;
+        public GameObject _prefabs_Red_BallFire;
+        public Transform _firePosition;
+        public float _speedBall = 8f;
     }
 
 
