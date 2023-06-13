@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Ring;
 using UnityEngine;
 
 public class PortalManager : MonoBehaviour
@@ -27,11 +28,7 @@ public class PortalManager : MonoBehaviour
 
     #endregion
 
-    public GameObject _portalBlue;
-    public GameObject _portalRed;
-    public float _forcePlayer;
-
-    public bool isCheckEnablePortal;
+    public Portal_Spawn _portalSpawn;
 
     // Start is called before the first frame update
     void Start()

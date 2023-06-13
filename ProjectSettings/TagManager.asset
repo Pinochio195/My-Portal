@@ -6,8 +6,8 @@ TagManager:
   tags:
   - Ground
   - Portal
-  - WallPortal
   - Ball
+  - WallPortal
   layers:
   - Default
   - TransparentFX

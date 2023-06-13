@@ -35,15 +35,15 @@ public class ColliderPortal : MonoBehaviour, ICollidable
 
     public void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.CompareTag("Player") && !PortalManager.Instance.isCheckEnablePortal)
+        if (col.CompareTag("Player") && !PortalManager.Instance._portalSpawn.isCheckEnablePortal)
         {
             GetForce(col);
             CheckTypePortal(col);
             col.GetComponent<Rigidbody2D>().velocity =
                 (_typePortal == TypePortal.Red
-                    ? PortalManager.Instance._portalBlue.transform.up
-                    : PortalManager.Instance._portalRed.transform.up) * PortalManager.Instance._forcePlayer;
-            PortalManager.Instance.isCheckEnablePortal = true;
+                    ? PortalManager.Instance._portalSpawn._portalBlue.transform.up
+                    : PortalManager.Instance._portalSpawn._portalRed.transform.up) * PortalManager.Instance._portalSpawn._forcePlayer;
+            PortalManager.Instance._portalSpawn.isCheckEnablePortal = true;
         }
     }
 
@@ -51,24 +51,24 @@ public class ColliderPortal : MonoBehaviour, ICollidable
     {
         if (col.CompareTag("Player"))
         {
-            if (PortalManager.Instance._forcePlayer == 0)
+            if (PortalManager.Instance._portalSpawn._forcePlayer == 0)
             {
-                PortalManager.Instance._forcePlayer = Mathf.Abs(col.GetComponent<Rigidbody2D>().velocity.y) + 6f;
+                PortalManager.Instance._portalSpawn._forcePlayer = Mathf.Abs(col.GetComponent<Rigidbody2D>().velocity.y) + 6f;
             }
 
             Quaternion portalBRotation = _typePortal == TypePortal.Red
-                ? PortalManager.Instance._portalBlue.transform.rotation
-                : PortalManager.Instance._portalRed.transform.rotation;
+                ? PortalManager.Instance._portalSpawn._portalBlue.transform.rotation
+                : PortalManager.Instance._portalSpawn._portalRed.transform.rotation;
 
             if (portalBRotation.eulerAngles.z == 0f || portalBRotation.eulerAngles.z == 180f)
             {
-                PortalManager.Instance._forcePlayer = Mathf.Clamp(PortalManager.Instance._forcePlayer, 5f, 25f);
+                PortalManager.Instance._portalSpawn._forcePlayer = Mathf.Clamp(PortalManager.Instance._portalSpawn._forcePlayer, 5f, 25f);
                 Debug.Log("Giới hạn 5");
             }
             else if (portalBRotation.eulerAngles.z == 90f || portalBRotation.eulerAngles.z == -90f)
             {
                 Debug.Log("Giới hạn 2");
-                PortalManager.Instance._forcePlayer = Mathf.Clamp(PortalManager.Instance._forcePlayer, 2f, 25f);
+                PortalManager.Instance._portalSpawn._forcePlayer = Mathf.Clamp(PortalManager.Instance._portalSpawn._forcePlayer, 2f, 25f);
             }
         }
     }
@@ -78,18 +78,18 @@ public class ColliderPortal : MonoBehaviour, ICollidable
         col.gameObject.SetActive(false);
         if (_typePortal == TypePortal.Blue)
         {
-            _transformPortal = PortalManager.Instance._portalRed.transform.position;
+            _transformPortal = PortalManager.Instance._portalSpawn._portalRed.transform.position;
         }
         else
         {
-            _transformPortal = PortalManager.Instance._portalBlue.transform.position;
+            _transformPortal = PortalManager.Instance._portalSpawn._portalBlue.transform.position;
         }
 
         col.transform.position = _transformPortal;
         PlayerController.Instance._playerComponent._skeletonAnimation.skeleton.ScaleX =
             ((_typePortal == TypePortal.Red
-                ? PortalManager.Instance._portalBlue.transform.eulerAngles.z
-                : PortalManager.Instance._portalRed.transform.eulerAngles.z) == 90)
+                ? PortalManager.Instance._portalSpawn._portalBlue.transform.eulerAngles.z
+                : PortalManager.Instance._portalSpawn._portalRed.transform.eulerAngles.z) == 90)
                 ? 1f
                 : -1f;
         col.gameObject.SetActive(true);
@@ -97,9 +97,9 @@ public class ColliderPortal : MonoBehaviour, ICollidable
 
     public void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Player") && PortalManager.Instance.isCheckEnablePortal)
+        if (other.CompareTag("Player") && PortalManager.Instance._portalSpawn.isCheckEnablePortal)
         {
-            PortalManager.Instance.isCheckEnablePortal = false;
+            PortalManager.Instance._portalSpawn.isCheckEnablePortal = false;
         }
     }
 }

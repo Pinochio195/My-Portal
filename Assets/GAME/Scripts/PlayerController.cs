@@ -52,13 +52,13 @@ public class PlayerController : BasePlayerController, ICollidable
 
     #endregion
 
-    [Space(10)] [HeaderTextColor(0.2f, 1, 1, headerText = "Jump For Player")]
+    [Space(5)] [HeaderTextColor(0.2f, 1, 1, headerText = "Jump For Player")]
     public Player_CheckGround playerCheckGround;
 
-    [Space(10)] [HeaderTextColor(0.2f, 1, 1, headerText = "Spine For Player")]
+    [Space(5)] [HeaderTextColor(0.2f, 1, 1, headerText = "Spine For Player")]
     public Player_Spine _playerSpine;
 
-    [Space(10)] [HeaderTextColor(0.2f, 1, 1, headerText = "Fire For Player")]
+    [Space(5)] [HeaderTextColor(0.2f, 1, 1, headerText = "Fire For Player")]
     public Player_Fire _playerFire;
 
     private void Start()
@@ -71,12 +71,6 @@ public class PlayerController : BasePlayerController, ICollidable
     {
         if (CheckUIReturn()) return;
         DirectionFire();
-
-        if (Input.GetMouseButtonDown(1))
-        {
-            _playerSpine._bone.SetToSetupPose();
-        }
-        Debug.DrawLine((Vector2)_playerFire._firePosition.position, Input.mousePosition, Color.red);
     }
 
     private void FixedUpdate()
@@ -118,11 +112,13 @@ public class PlayerController : BasePlayerController, ICollidable
 
     private void DirectionFire()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0)&& (Time.time - _playerFire.lastFireTime) >= _playerFire.fireCooldown)
         {
             Vector2 mousePosition = Input.mousePosition;
             mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
             DirectionFace(mousePosition);
+            // Ghi nhận thời gian bắn cuối cùng
+            _playerFire.lastFireTime = Time.time;
         }
     }
 
@@ -141,12 +137,7 @@ public class PlayerController : BasePlayerController, ICollidable
         }
 
         _playerSpine._bone.SetPositionSkeletonSpace(_playerFire._positionBone.normalized);
-        //_playerComponent._skeletonAnimation.state.SetAnimation(0, "Shoot", false);
-        Vector2 fireDirection = ((Vector2)_playerFire._firePosition.position - (Vector2)mousePosition).normalized;
-        _playerFire._ballFireGameObject = LeanPool.Spawn(_playerFire._prefabs_Blue_BallFire,
-            _playerFire._firePosition.position, Quaternion.identity);
-        _playerFire._ballFireGameObject.GetComponent<Rigidbody2D>().velocity =
-            fireDirection * _playerFire._speedBall;
+        _playerComponent._skeletonAnimation.state.SetAnimation(0, "Shoot", false);
     }
 
     private void FireBall(TrackEntry trackEntry, Spine.Event e)
@@ -159,11 +150,21 @@ public class PlayerController : BasePlayerController, ICollidable
 
     private void Fire()
     {
-        Vector2 fireDirection = (_playerFire._positionBone - (Vector2)_playerFire._firePosition.transform.position).normalized;
-        _playerFire._ballFireGameObject = LeanPool.Spawn(_playerFire._prefabs_Blue_BallFire,
+        Vector2 fireDirection = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) -
+                                 (Vector2)_playerFire._firePosition.position).normalized;
+        //spam ball
+        _playerFire._ballFireGameObject = LeanPool.Spawn((_playerFire._typeBall == Player_Fire.TypeBall.Blue?_playerFire._prefabs_Blue_BallFire:_playerFire._prefabs_Red_BallFire),
             _playerFire._firePosition.position, Quaternion.identity);
+        //fire ball
         _playerFire._ballFireGameObject.GetComponent<Rigidbody2D>().velocity =
             fireDirection * _playerFire._speedBall;
+        //change skin , ball
+        _playerFire._typeBall = (_playerFire._typeBall == Player_Fire.TypeBall.Blue)
+            ? Player_Fire.TypeBall.Red
+            : Player_Fire.TypeBall.Blue;
+        _playerFire._skinPlayer = _playerFire._typeBall.ToString();
+        _playerComponent._skeletonAnimation.Skeleton.SetSkin(_playerFire._skinPlayer);
+        _playerComponent._skeletonAnimation.Skeleton.SetSlotsToSetupPose();
     }
 
     #region Move Player
@@ -201,8 +202,7 @@ public class PlayerController : BasePlayerController, ICollidable
         {
             if (_playerComponent._rigidbody.velocity.y == 0)
             {
-                Debug.Log(222);
-                PortalManager.Instance._forcePlayer = 0;
+                PortalManager.Instance._portalSpawn._forcePlayer = 0;
             }
         }
     }
