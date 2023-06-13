@@ -57,14 +57,14 @@ public class PlayerController : BasePlayerController, ICollidable
 
     [Space(10)] [HeaderTextColor(0.2f, 1, 1, headerText = "Spine For Player")]
     public Player_Spine _playerSpine;
+
     [Space(10)] [HeaderTextColor(0.2f, 1, 1, headerText = "Fire For Player")]
     public Player_Fire _playerFire;
-    public delegate void BonePositionSetDelegate();
-    public static event BonePositionSetDelegate OnBonePositionSet;
+
     private void Start()
     {
         _playerSpine._bone = _playerComponent._skeletonAnimation.Skeleton.FindBone(_playerSpine._boneName);
-        OnBonePositionSet += BonePositionSetCallback;
+        _playerComponent._skeletonAnimation.AnimationState.Event += FireBall;
     }
 
     private void Update()
@@ -76,6 +76,12 @@ public class PlayerController : BasePlayerController, ICollidable
         {
             _playerSpine._bone.SetToSetupPose();
         }
+        Debug.DrawLine((Vector2)_playerFire._firePosition.position, Input.mousePosition, Color.red);
+    }
+
+    private void FixedUpdate()
+    {
+        PlayerMove();
     }
 
     private static bool CheckUIReturn()
@@ -122,33 +128,42 @@ public class PlayerController : BasePlayerController, ICollidable
 
     private void DirectionFace(Vector2 mousePosition)
     {
-        Vector2 position = _playerComponent._skeletonAnimation.transform.InverseTransformPoint(mousePosition);
-        if ((position.x < 0 && _playerComponent._skeletonAnimation.skeleton.ScaleX == -1f) ||
-            (position.x > 0 && _playerComponent._skeletonAnimation.skeleton.ScaleX == 1f))
+        _playerFire._positionBone = _playerComponent._skeletonAnimation.transform.InverseTransformPoint(mousePosition);
+        if ((_playerFire._positionBone.x < 0 && _playerComponent._skeletonAnimation.skeleton.ScaleX == -1f) ||
+            (_playerFire._positionBone.x > 0 && _playerComponent._skeletonAnimation.skeleton.ScaleX == 1f))
         {
             _playerComponent._skeletonAnimation.skeleton.ScaleX *= -1f;
-            position.x *= -1f;
+            _playerFire._positionBone.x *= -1f;
         }
         else
         {
             _playerSpine._bone.SetToSetupPose();
         }
-        _playerSpine._bone.SetPositionSkeletonSpace(position.normalized);
-        OnBonePositionSet?.Invoke();
-        /*Vector2 fireDirection = (mousePosition - (Vector2)_playerFire._firePosition.transform.position).normalized;
-        _playerFire._ballFireGameObject = LeanPool.Spawn(_playerFire._prefabs_Blue_BallFire, _playerFire._firePosition.position,Quaternion.identity);
+
+        _playerSpine._bone.SetPositionSkeletonSpace(_playerFire._positionBone.normalized);
+        //_playerComponent._skeletonAnimation.state.SetAnimation(0, "Shoot", false);
+        Vector2 fireDirection = ((Vector2)_playerFire._firePosition.position - (Vector2)mousePosition).normalized;
+        _playerFire._ballFireGameObject = LeanPool.Spawn(_playerFire._prefabs_Blue_BallFire,
+            _playerFire._firePosition.position, Quaternion.identity);
         _playerFire._ballFireGameObject.GetComponent<Rigidbody2D>().velocity =
-            fireDirection * _playerFire._speedBall;*/
-    }
-    void BonePositionSetCallback()
-    {
-        Debug.Log("Bone position has been set.");
-        LeanPool.Spawn(_playerFire._prefabs_Blue_BallFire, _playerFire._firePosition.position,Quaternion.identity);
+            fireDirection * _playerFire._speedBall;
     }
 
-    private void FixedUpdate()
+    private void FireBall(TrackEntry trackEntry, Spine.Event e)
     {
-        PlayerMove();
+        if (e.Data.Name == _playerFire._fireEvent)
+        {
+            Fire();
+        }
+    }
+
+    private void Fire()
+    {
+        Vector2 fireDirection = (_playerFire._positionBone - (Vector2)_playerFire._firePosition.transform.position).normalized;
+        _playerFire._ballFireGameObject = LeanPool.Spawn(_playerFire._prefabs_Blue_BallFire,
+            _playerFire._firePosition.position, Quaternion.identity);
+        _playerFire._ballFireGameObject.GetComponent<Rigidbody2D>().velocity =
+            fireDirection * _playerFire._speedBall;
     }
 
     #region Move Player

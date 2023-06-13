@@ -52,6 +52,8 @@ namespace Ring
         public GameObject _prefabs_Red_BallFire;
         public Transform _firePosition;
         public float _speedBall = 8f;
+        [SpineEvent] public string _fireEvent;
+        public Vector2 _positionBone;
     }
 
 
