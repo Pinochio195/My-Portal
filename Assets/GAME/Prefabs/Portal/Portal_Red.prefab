@@ -180,7 +180,7 @@ GameObject:
   - component: {fileID: 7876541369380718293}
   - component: {fileID: 6701527426158534023}
   m_Layer: 7
-  m_Name: Portal_Blue 1
+  m_Name: Portal_Red
   m_TagString: Portal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -201,7 +201,7 @@ Transform:
   - {fileID: 9156053707912615292}
   - {fileID: 6044659976880807505}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &7876541369380718293
 BoxCollider2D:
