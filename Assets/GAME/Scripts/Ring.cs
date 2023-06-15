@@ -4,6 +4,7 @@ using Spine;
 using Spine.Unity;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 namespace Ring
 {
@@ -63,12 +64,20 @@ namespace Ring
     [Serializable]
     public class Portal_Spawn
     {
-        public GameObject _portalBlue;
-        public GameObject _portalRed;
+        [HideInInspector]public GameObject _portalBlue;
+        [HideInInspector]public GameObject _portalRed;
         public GameObject _prefabsPortalBlue;
         public GameObject _prefabsPortalRed;
         public float _forcePlayer;
         [HideInInspector]public bool isCheckEnablePortal;
+        [HideInInspector]public Collider2D _wallTouch_PortalBlue;
+        [HideInInspector]public Collider2D _wallTouch_PortalRed;
+
+        #region Vô hiệu hóa 2 button để trong khi bay không được điều khiển
+
+        public bool isCheckingMoveWhenTele;
+
+        #endregion
     }
     #region Ui
 

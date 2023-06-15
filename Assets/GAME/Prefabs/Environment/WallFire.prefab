@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8801631181095231042}
   - component: {fileID: 864697543604732192}
   - component: {fileID: 5170219947062687299}
+  - component: {fileID: 27770517663381444}
   m_Layer: 8
   m_Name: WallFire
   m_TagString: WallPortal
@@ -31,7 +32,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &864697543604732192
 SpriteRenderer:
@@ -117,7 +118,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.04275179, y: 0}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -126,7 +127,20 @@ BoxCollider2D:
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
-  m_AutoTiling: 1
+  m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2.4544964, y: 8.25}
+  m_Size: {x: 2.54, y: 8.25}
   m_EdgeRadius: 0
+--- !u!114 &27770517663381444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1447475142172843213}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2f654e68c0975f45b4c1cb7348a6c0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _direction: 90

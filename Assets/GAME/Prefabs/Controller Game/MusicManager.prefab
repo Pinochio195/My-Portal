@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &7629747742619854888
+--- !u!1 &4877152956431417940
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,48 +8,43 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4119197092466536315}
-  - component: {fileID: 5601062351341414603}
+  - component: {fileID: 6314416390812446625}
+  - component: {fileID: 1845464855804009471}
   m_Layer: 0
-  m_Name: PortalManager
+  m_Name: MusicManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4119197092466536315
+--- !u!4 &6314416390812446625
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7629747742619854888}
+  m_GameObject: {fileID: 4877152956431417940}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.211767, y: -2.649275, z: -0.041115727}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5601062351341414603
+--- !u!114 &1845464855804009471
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7629747742619854888}
+  m_GameObject: {fileID: 4877152956431417940}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6490e6f1be50cc94eb74ac1b5ff1a301, type: 3}
+  m_Script: {fileID: 11500000, guid: 82cab6083b51ef64ba7414100232f38e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _portalSpawn:
-    _portalBlue: {fileID: 0}
-    _portalRed: {fileID: 0}
-    _prefabsPortalBlue: {fileID: 5314905907813665782, guid: 69e46006ffbf5e44b93ee4c4f2e6f397, type: 3}
-    _prefabsPortalRed: {fileID: 7824808780736859401, guid: 275dc53a7dfe59145b959b5ea03b14ff, type: 3}
-    _forcePlayer: 6
-    isCheckEnablePortal: 0
-    _wallTouch_PortalBlue: {fileID: 0}
-    _wallTouch_PortalRed: {fileID: 0}
+  _audioSource: {fileID: 0}
+  _audio: {fileID: 0}
+  _audio1: {fileID: 0}
+  _audio2: {fileID: 0}

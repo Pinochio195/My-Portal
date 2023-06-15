@@ -71,6 +71,10 @@ public class PlayerController : BasePlayerController, ICollidable
     {
         if (CheckUIReturn()) return;
         DirectionFire();
+        if (Input.GetMouseButtonDown(1))
+        {
+            _playerComponent._skeletonAnimation.Skeleton.SetToSetupPose();
+        }
     }
 
     private void FixedUpdate()
@@ -165,8 +169,16 @@ public class PlayerController : BasePlayerController, ICollidable
         _playerFire._skinPlayer = _playerFire._typeBall.ToString();
         _playerComponent._skeletonAnimation.Skeleton.SetSkin(_playerFire._skinPlayer);
         _playerComponent._skeletonAnimation.Skeleton.SetSlotsToSetupPose();
+        // Đăng ký callback khi animation bắn kết thúc
+        _playerComponent._skeletonAnimation.AnimationState.Complete += OnFireAnimationComplete;
     }
-
+    private void OnFireAnimationComplete(TrackEntry trackEntry)
+    {
+        // Hủy đăng ký callback và chuyển sang animation Idle
+        _playerComponent._skeletonAnimation.AnimationState.Complete -= OnFireAnimationComplete;
+        _playerComponent._skeletonAnimation.AnimationState.SetAnimation(0, "Idle_1", true);
+        _playerComponent._skeletonAnimation.Skeleton.SetToSetupPose();
+    }
     #region Move Player
 
     protected override void PlayerMove()
@@ -198,17 +210,19 @@ public class PlayerController : BasePlayerController, ICollidable
 
     public void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        if (collision.gameObject.CompareTag("Ground")|| collision.gameObject.CompareTag("WallPortal"))
         {
             if (_playerComponent._rigidbody.velocity.y == 0)
             {
                 PortalManager.Instance._portalSpawn._forcePlayer = 0;
+                PortalManager.Instance._portalSpawn.isCheckingMoveWhenTele = true;
             }
         }
     }
 
     public void OnCollisionExit2D(Collision2D collision)
     {
+        
     }
 
     public void OnTriggerEnter2D(Collider2D other)

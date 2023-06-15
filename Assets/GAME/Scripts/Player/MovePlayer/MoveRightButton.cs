@@ -4,25 +4,19 @@ using UnityEngine;
 
 public class MoveRightButton : BaseButton
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     protected override void OnPress()
     {
-        PlayerController.Instance.StartMovingRight();
+        if (PortalManager.Instance._portalSpawn.isCheckingMoveWhenTele)//nếu player đang tele thì ko cho di chuyển cho tới khi chạm tới ground hoặc wallportal
+        {
+            PlayerController.Instance.StartMovingRight();
+        }
     }
 
     protected override void OnRelease()
     {
-        PlayerController.Instance.StopMovingRight();
+        if (PortalManager.Instance._portalSpawn.isCheckingMoveWhenTele)//nếu player đang tele thì ko cho di chuyển cho tới khi chạm tới ground hoặc wallportal
+        {
+            PlayerController.Instance.StopMovingRight();
+        }
     }
 }

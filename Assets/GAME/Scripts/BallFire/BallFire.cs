@@ -35,6 +35,10 @@ public class BallFire : MonoBehaviour, ICollidable
                 Debug.Log("Done!");
             }
         }
+        else if (collision.gameObject.CompareTag("Ground"))
+        {
+            LeanPool.Despawn(PlayerController.Instance._playerFire._ballFireGameObject);
+        }
     }
 
     private void SpawnPortal(Collision2D collision, Collider2D wallCollider)
@@ -52,8 +56,8 @@ public class BallFire : MonoBehaviour, ICollidable
         }
 
         #endregion
-
         LeanPool.Despawn(PlayerController.Instance._playerFire._ballFireGameObject);
+
 
         #region Check space để spawn portal
 
@@ -62,37 +66,42 @@ public class BallFire : MonoBehaviour, ICollidable
             var portalRed = PortalManager.Instance._portalSpawn._portalRed;
             var redCollider = portalRed != null ? portalRed.GetComponent<Collider2D>() : null;
             var portalBounds = redCollider != null ? redCollider.bounds : default;
-
-            if (angle == 90 || angle == -90)
+            if (portalRed == null || Mathf.Approximately(contactPoint.y, portalRed.transform.position.y) ||
+                Mathf.Approximately(contactPoint.x, portalRed.transform.position.x))
             {
-                if (portalRed != null && contactPoint.y < portalRed.transform.position.y)
+                if (angle == 90 || angle == -90)
                 {
-                    if (Mathf.Abs(portalBounds.min.y - wallCollider.bounds.min.y) < portalBounds.size.y)
+                    if (portalRed != null && contactPoint.y < portalRed.transform.position.y)
                     {
-                        return;
+                        if (Mathf.Abs(portalBounds.min.y - wallCollider.bounds.min.y) < portalBounds.size.y)
+                        {
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        if (Mathf.Abs(portalBounds.max.y - wallCollider.bounds.max.y) < portalBounds.size.y)
+                        {
+                            return;
+                        }
                     }
                 }
                 else
                 {
-                    if (Mathf.Abs(portalBounds.max.y - wallCollider.bounds.max.y) < portalBounds.size.y)
+                    if (portalRed != null && contactPoint.x < portalRed.transform.position.x)
                     {
-                        return;
+                        if (Mathf.Abs(portalBounds.min.x - wallCollider.bounds.min.x) < portalBounds.size.x)
+                        {
+                            return;
+                        }
                     }
-                }
-            }
-            else
-            {
-                if (portalRed != null && contactPoint.x < portalRed.transform.position.x)
-                {
-                    if (Mathf.Abs(portalBounds.min.x - wallCollider.bounds.min.x) < portalBounds.size.y)
+                    else
                     {
-                        return;
+                        if (Mathf.Abs(portalBounds.max.x - wallCollider.bounds.max.x) < portalBounds.size.x)
+                        {
+                            return;
+                        }
                     }
-                }
-
-                if (Mathf.Abs(portalBounds.max.y - wallCollider.bounds.max.y) < portalBounds.size.y)
-                {
-                    return;
                 }
             }
         }
@@ -101,37 +110,42 @@ public class BallFire : MonoBehaviour, ICollidable
             var portalBlue = PortalManager.Instance._portalSpawn._portalBlue;
             var blueCollider = portalBlue != null ? portalBlue.GetComponent<Collider2D>() : null;
             var portalBounds = blueCollider != null ? blueCollider.bounds : default;
-
-            if (angle == 90 || angle == -90)
+            if (portalBlue == null || Mathf.Approximately(contactPoint.y, portalBlue.transform.position.y) ||
+                Mathf.Approximately(contactPoint.x, portalBlue.transform.position.x))
             {
-                if (portalBlue != null && contactPoint.y < portalBlue.transform.position.y)
+                if (angle == 90 || angle == -90)
                 {
-                    if (Mathf.Abs(portalBounds.min.y - wallCollider.bounds.min.y) < portalBounds.size.y)
+                    if (portalBlue != null && contactPoint.y < portalBlue.transform.position.y)
                     {
-                        return;
+                        if (Mathf.Abs(portalBounds.min.y - wallCollider.bounds.min.y) < portalBounds.size.y)
+                        {
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        if (Mathf.Abs(portalBounds.max.y - wallCollider.bounds.max.y) < portalBounds.size.y)
+                        {
+                            return;
+                        }
                     }
                 }
                 else
                 {
-                    if (Mathf.Abs(portalBounds.max.y - wallCollider.bounds.max.y) < portalBounds.size.y)
+                    if (portalBlue != null && contactPoint.x < portalBlue.transform.position.x)
                     {
-                        return;
+                        if (Mathf.Abs(portalBounds.min.x - wallCollider.bounds.min.x) < portalBounds.size.x)
+                        {
+                            return;
+                        }
                     }
-                }
-            }
-            else
-            {
-                if (portalBlue != null && contactPoint.x < portalBlue.transform.position.x)
-                {
-                    if (Mathf.Abs(portalBounds.min.x - wallCollider.bounds.min.x) < portalBounds.size.y)
+                    else
                     {
-                        return;
+                        if (Mathf.Abs(portalBounds.max.x - wallCollider.bounds.max.x) < portalBounds.size.x)
+                        {
+                            return;
+                        }
                     }
-                }
-
-                if (Mathf.Abs(portalBounds.max.y - wallCollider.bounds.max.y) < portalBounds.size.y)
-                {
-                    return;
                 }
             }
         }
@@ -142,14 +156,28 @@ public class BallFire : MonoBehaviour, ICollidable
         //Spawn cổng
         if (_typeBall == TypeBall.Blue)
         {
+            #region Lấy wall của portal khi chạm để tắt đi khi player dịch chuyển qua cổng
+
+            PortalManager.Instance._portalSpawn._wallTouch_PortalBlue = collision.gameObject.GetComponent<Collider2D>();
+
+            #endregion
+
+            #region Xóa portal cũ đang tồn tại
+
             if (PortalManager.Instance._portalSpawn._portalBlue != null)
             {
                 LeanPool.Despawn(PortalManager.Instance._portalSpawn._portalBlue);
             }
 
+            #endregion
+
+            #region Sinh cổng mới
+
             PortalManager.Instance._portalSpawn._portalBlue = LeanPool.Spawn(
                 PortalManager.Instance._portalSpawn._prefabsPortalBlue, collision.transform.position,
                 Quaternion.Euler(0, 0, angle));
+
+            #endregion
 
             #region Các biến nạp vào hàm
 
@@ -161,21 +189,35 @@ public class BallFire : MonoBehaviour, ICollidable
 
             #endregion
 
-            //lấy collider của cổng
-            CheckUpDownPortal(wallCollider, contactPoint, angle, portalColliderSize, wallWidthX , wallWidthY, wallCenter,
+            //đưa portal về đúng vị trí
+            CheckUpDownPortal(wallCollider, contactPoint, angle, portalColliderSize, wallWidthX, wallWidthY, wallCenter,
                 contactNormal, PortalManager.Instance._portalSpawn._portalBlue,
                 PortalManager.Instance._portalSpawn._portalRed);
         }
         else if (_typeBall == TypeBall.Red)
         {
+            #region Lấy wall của portal khi chạm để tắt đi khi player dịch chuyển qua cổng
+
+            PortalManager.Instance._portalSpawn._wallTouch_PortalRed = collision.gameObject.GetComponent<Collider2D>();
+
+            #endregion
+
+            #region Xóa portal cũ đang tồng tại
+
             if (PortalManager.Instance._portalSpawn._portalRed != null)
             {
                 LeanPool.Despawn(PortalManager.Instance._portalSpawn._portalRed);
             }
 
+            #endregion
+
+            #region Sinh cổng mới
+
             PortalManager.Instance._portalSpawn._portalRed = LeanPool.Spawn(
                 PortalManager.Instance._portalSpawn._prefabsPortalRed, collision.transform.position,
                 Quaternion.Euler(0, 0, angle));
+
+            #endregion
 
             #region Các biến nạp vào hàm
 
@@ -184,10 +226,11 @@ public class BallFire : MonoBehaviour, ICollidable
             Vector2 portalColliderSize = portalCollider.bounds.size;
             float wallWidth = wallCollider.bounds.size.x;
             float wallWidthY = wallCollider.bounds.size.y;
+
             #endregion
 
-            //lấy collider của cổng
-            CheckUpDownPortal(wallCollider, contactPoint, angle, portalColliderSize, wallWidth , wallWidthY, wallCenter,
+            //đưa portal về đúng vị trí
+            CheckUpDownPortal(wallCollider, contactPoint, angle, portalColliderSize, wallWidth, wallWidthY, wallCenter,
                 contactNormal, PortalManager.Instance._portalSpawn._portalRed,
                 PortalManager.Instance._portalSpawn._portalBlue);
         }
@@ -195,7 +238,7 @@ public class BallFire : MonoBehaviour, ICollidable
 
     private void CheckUpDownPortal(Collider2D wallCollider, Vector2 contactPoint, float angle,
         Vector2 portalColliderSize,
-        float wallWidthX , float wallWidthY, Vector2 wallCenter, Vector2 contactNormal, GameObject portalSpawn,
+        float wallWidthX, float wallWidthY, Vector2 wallCenter, Vector2 contactNormal, GameObject portalSpawn,
         GameObject portalCurrent)
     {
         if (angle == 90 || angle == -90)
@@ -216,14 +259,15 @@ public class BallFire : MonoBehaviour, ICollidable
 
     #region Angle = 90 hoặc -90
 
-    private void ChangePortal_90_Nega90(Collider2D wallCollider, float angle, Vector2 portalColliderSize, float wallWidth,
+    private void ChangePortal_90_Nega90(Collider2D wallCollider, float angle, Vector2 portalColliderSize,
+        float wallWidth,
         Vector2 wallCenter, Vector2 contactNormal, Vector2 contactPoint, GameObject portalSpawn,
         GameObject portalCurrent)
     {
-        Spawn_90_Nega90(wallCollider, portalColliderSize, wallCenter, contactNormal, contactPoint, portalSpawn , wallWidth);
+        Spawn_90_Nega90(wallCollider, portalColliderSize, wallCenter, contactNormal, contactPoint, portalSpawn,
+            wallWidth);
         if (portalCurrent != null)
         {
-           
             //đang cùng 1 cột
             if (Mathf.Abs(PortalManager.Instance._portalSpawn._portalRed.transform.position.x -
                           PortalManager.Instance._portalSpawn._portalBlue.transform.position.x) < 0.55f)
@@ -236,7 +280,6 @@ public class BallFire : MonoBehaviour, ICollidable
                     if (Mathf.Abs(portalSpawn.transform.position.y - portalCurrent.transform.position.y) <
                         portalCurrent.GetComponent<Collider2D>().bounds.size.y)
                     {
-                        Debug.Log(123);
                         if (contactPoint.y > portalCurrent.transform.position.y)
                         {
                             minY = portalCurrent.GetComponent<Collider2D>().bounds.max.y + sizePortal;
@@ -265,13 +308,14 @@ public class BallFire : MonoBehaviour, ICollidable
                 }
             }
         }
-        
     }
 
-    private void Spawn_90_Nega90(Collider2D wallCollider, Vector2 portalColliderSize, Vector2 wallCenter, Vector2 contactNormal,
-        Vector2 contactPoint, GameObject portalSpawn , float wallWidth)
+    private void Spawn_90_Nega90(Collider2D wallCollider, Vector2 portalColliderSize, Vector2 wallCenter,
+        Vector2 contactNormal,
+        Vector2 contactPoint, GameObject portalSpawn, float wallWidth)
     {
         #region Điều chỉnh vị trí của box collider của portal để dính sát vào box collider của wall
+
         float portalWidth = portalColliderSize.x;
         float distanceFromWallCenter = (wallWidth + portalWidth) * 0.5f;
         Vector2 newPosition = wallCenter + contactNormal * distanceFromWallCenter;
@@ -283,15 +327,18 @@ public class BallFire : MonoBehaviour, ICollidable
 
         #endregion
     }
+
     #endregion
 
     #region Angle = 0 hoặc -180
 
-    private void ChangePortal_0_Nega180(Collider2D wallCollider, float angle, Vector2 portalColliderSize, float wallWidth,
+    private void ChangePortal_0_Nega180(Collider2D wallCollider, float angle, Vector2 portalColliderSize,
+        float wallWidth,
         Vector2 wallCenter, Vector2 contactNormal, Vector2 contactPoint, GameObject portalSpawn,
         GameObject portalCurrent)
     {
-        Spawn_0_Nega180(wallCollider, portalColliderSize, wallCenter, contactNormal, contactPoint, portalSpawn,wallWidth);
+        Spawn_0_Nega180(wallCollider, portalColliderSize, wallCenter, contactNormal, contactPoint, portalSpawn,
+            wallWidth);
         if (portalCurrent != null)
         {
             //đang cùng 1 cột
@@ -306,15 +353,13 @@ public class BallFire : MonoBehaviour, ICollidable
                     if (Mathf.Abs(portalSpawn.transform.position.x - portalCurrent.transform.position.x) <
                         portalCurrent.GetComponent<Collider2D>().bounds.size.x)
                     {
-                        Debug.Log(123);
-                        if (contactPoint.y > portalCurrent.transform.position.x)
+                        if (contactPoint.x > portalCurrent.transform.position.x)
                         {
                             minY = portalCurrent.GetComponent<Collider2D>().bounds.max.x + sizePortal;
                             maxY = wallCollider.bounds.max.x - sizePortal;
                             Vector2 newPosition1 = (Vector2)portalCurrent.transform.position +
-                                                   new Vector2(0,
-                                                       portalCurrent.GetComponent<Collider2D>().bounds.size.x +
-                                                       .3f);
+                                                   new Vector2(
+                                                       portalCurrent.GetComponent<Collider2D>().bounds.size.x + .3f, 0);
                             newPosition1.x = Mathf.Clamp(newPosition1.x, minY, maxY);
                             portalSpawn.transform.position = newPosition1;
                         }
@@ -323,9 +368,9 @@ public class BallFire : MonoBehaviour, ICollidable
                             maxY = portalCurrent.GetComponent<Collider2D>().bounds.min.x - sizePortal;
                             minY = wallCollider.bounds.min.x + sizePortal;
                             Vector2 newPosition1 = (Vector2)portalCurrent.transform.position -
-                                                   new Vector2(0,
-                                                       portalCurrent.GetComponent<Collider2D>().bounds.size.x +
-                                                       .3f);
+                                                   new Vector2(portalCurrent.GetComponent<Collider2D>().bounds.size.x +
+                                                               .3f,
+                                                       0);
                             newPosition1.x = Mathf.Clamp(newPosition1.x, minY, maxY);
                             portalSpawn.transform.position = newPosition1;
                         }
@@ -333,14 +378,15 @@ public class BallFire : MonoBehaviour, ICollidable
                 }
             }
         }
-       
     }
-    private void Spawn_0_Nega180(Collider2D wallCollider, Vector2 portalColliderSize, Vector2 wallCenter, Vector2 contactNormal,
+
+    private void Spawn_0_Nega180(Collider2D wallCollider, Vector2 portalColliderSize, Vector2 wallCenter,
+        Vector2 contactNormal,
         Vector2 contactPoint, GameObject portalSpawn, float wallWidth)
     {
-        Debug.Log(12);
         #region Điều chỉnh vị trí của box collider của portal để dính sát vào box collider của wall
-        float portalWidth = portalColliderSize.x;
+
+        float portalWidth = portalColliderSize.y - .35f;
         float distanceFromWallCenter = (wallWidth + portalWidth) * 0.5f;
         Vector2 newPosition = wallCenter + contactNormal * distanceFromWallCenter;
         newPosition.x = contactPoint.x;
@@ -351,7 +397,9 @@ public class BallFire : MonoBehaviour, ICollidable
 
         #endregion
     }
+
     #endregion
+
     public void OnCollisionExit2D(Collision2D collision)
     {
     }
