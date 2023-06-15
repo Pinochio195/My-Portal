@@ -66,8 +66,9 @@ public class BallFire : MonoBehaviour, ICollidable
             var portalRed = PortalManager.Instance._portalSpawn._portalRed;
             var redCollider = portalRed != null ? portalRed.GetComponent<Collider2D>() : null;
             var portalBounds = redCollider != null ? redCollider.bounds : default;
-            if (portalRed == null || Mathf.Approximately(contactPoint.y, portalRed.transform.position.y) ||
-                Mathf.Approximately(contactPoint.x, portalRed.transform.position.x))
+
+                if (portalRed == null || Mathf.Abs(contactPoint.y- portalRed.transform.position.y) <= .75f ||
+                    Mathf.Abs(contactPoint.x- portalRed.transform.position.x) <=.75f)
             {
                 if (angle == 90 || angle == -90)
                 {
@@ -110,8 +111,8 @@ public class BallFire : MonoBehaviour, ICollidable
             var portalBlue = PortalManager.Instance._portalSpawn._portalBlue;
             var blueCollider = portalBlue != null ? portalBlue.GetComponent<Collider2D>() : null;
             var portalBounds = blueCollider != null ? blueCollider.bounds : default;
-            if (portalBlue == null || Mathf.Approximately(contactPoint.y, portalBlue.transform.position.y) ||
-                Mathf.Approximately(contactPoint.x, portalBlue.transform.position.x))
+            if (portalBlue == null || Mathf.Abs(contactPoint.y-portalBlue.transform.position.y) <=.75f||
+                Mathf.Abs(contactPoint.x-portalBlue.transform.position.x) <= .75f)
             {
                 if (angle == 90 || angle == -90)
                 {
@@ -299,9 +300,7 @@ public class BallFire : MonoBehaviour, ICollidable
                                                    new Vector2(0,
                                                        portalCurrent.GetComponent<Collider2D>().bounds.size.y +
                                                        .3f);
-                            Debug.Log(newPosition1.y);
                             newPosition1.y = Mathf.Clamp(newPosition1.y, minY, maxY);
-                            Debug.Log(newPosition1.y);
                             portalSpawn.transform.position = newPosition1;
                         }
                     }
