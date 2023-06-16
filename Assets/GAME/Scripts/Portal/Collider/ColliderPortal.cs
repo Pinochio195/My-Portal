@@ -98,16 +98,18 @@ public class ColliderPortal : MonoBehaviour, ICollidable
             portalBRotation = _typePortal == TypePortal.Red
                 ? PortalManager.Instance._portalSpawn._portalBlue.transform.rotation
                 : PortalManager.Instance._portalSpawn._portalRed.transform.rotation;
-            Debug.Log(portalBRotation.eulerAngles.z);
-            if (portalBRotation.eulerAngles.z == 0f || portalBRotation.eulerAngles.z == 180f)
+            if (portalBRotation.eulerAngles.z is 0f or 180f)
             {
                 PortalManager.Instance._portalSpawn._forcePlayer = Mathf.Clamp(PortalManager.Instance._portalSpawn._forcePlayer, 8f, 25f);
                 Debug.Log("Giới hạn 5");
             }
-            else if (portalBRotation.eulerAngles.z == 90f || portalBRotation.eulerAngles.z == 270f)
+            else if (portalBRotation.eulerAngles.z is 90f or 270f)
             {
                 Debug.Log("Giới hạn 2");
-                PortalManager.Instance._portalSpawn._forcePlayer = Mathf.Clamp(PortalManager.Instance._portalSpawn._forcePlayer, 2f, 25f);
+                PortalManager.Instance._portalSpawn._forcePlayer =
+                    Mathf.Abs(col.GetComponent<Rigidbody2D>().velocity.y)+5.25f;
+                Debug.Log(PortalManager.Instance._portalSpawn._forcePlayer);
+                PortalManager.Instance._portalSpawn._forcePlayer = Mathf.Clamp(PortalManager.Instance._portalSpawn._forcePlayer, 0f, 25f);
             }
         }
         CheckTypePortal(col,portalBRotation);
@@ -129,8 +131,7 @@ public class ColliderPortal : MonoBehaviour, ICollidable
             _transformPortal = PortalManager.Instance._portalSpawn._portalBlue.transform.position;
             PortalManager.Instance._portalSpawn._wallTouch_PortalBlue.isTrigger = true;
         }
-        Debug.Log(portalBRotation.eulerAngles.z);
-        if (Mathf.Approximately(portalBRotation.eulerAngles.z, 90f) || Mathf.Approximately(portalBRotation.eulerAngles.z, 270f))
+       if (Mathf.Approximately(portalBRotation.eulerAngles.z, 90f) || Mathf.Approximately(portalBRotation.eulerAngles.z, 270f))
         {
             _transformPortal += new Vector3(direction * -0.5f, -0.5f, 0);
         }

@@ -44,81 +44,14 @@ public class SwitchScene : MonoBehaviour
 
     #endregion
 
-    public SpriteRenderer _backGround;
-    public float fadeDuration = 2f;
-    private bool isFading = false;
-
-    private void Update()
+    public Animator _animator;
+    public void FadeInGame()
     {
-        if (Input.GetMouseButtonDown(0) && !isFading && _backGround.color.a == 0) 
-        {
-            isFading = true;
-            FadeIn();
-        }
-
-        if (Input.GetMouseButtonDown(1) && !isFading&& _backGround.color.a == 1)
-        {
-            isFading = true;
-            FadeOut();
-        }
-    }
-
-    private void FadeIn()
-    {
-        StartCoroutine(FadeRoutine(0f, 1f));
-    }
-
-    private void FadeOut()
-    {
-        StartCoroutine(FadeRoutine(1f, 0f));
-    }
-
-    private IEnumerator FadeRoutine(float startAlpha, float targetAlpha)
-    {
-        float currentTime = 0f;
-        float fadeDuration = 2f; // Thời gian phai mờ
-
-        while (currentTime < fadeDuration)
-        {
-            currentTime += Time.deltaTime;
-
-            float alpha = Mathf.Lerp(startAlpha, targetAlpha, currentTime / fadeDuration);
-
-            Color color = _backGround.color;
-            color.a = alpha;
-            _backGround.color = color;
-
-            yield return null;
-        }
-
-        isFading = false;
-    }
-
-    private void Start()
-    {
-        ScaleBackground();
-    }
-    private void ScaleBackground()
-    {
-        // Lấy kích thước của camera
-        Camera camera = Camera.main;
-        float cameraHeight = camera.orthographicSize * 2;
-        float cameraWidth = cameraHeight * camera.aspect;
-
-        // Lấy kích thước của sprite
-        float spriteWidth = _backGround.sprite.bounds.size.x;
-        float spriteHeight = _backGround.sprite.bounds.size.y;
-
-        // Tính toán tỉ lệ phóng to theo chiều ngang và chiều dọc
-        float scaleX = cameraWidth / spriteWidth;
-        float scaleY = cameraHeight / spriteHeight;
-
-        // Chọn tỉ lệ phóng to lớn nhất để điền hết màn hình
-        float scale = Mathf.Max(scaleX, scaleY);
-
-        // Áp dụng tỉ lệ phóng to
-        _backGround.transform.localScale = new Vector3(scale, scale, 1f);
+        _animator.SetBool("FadeIn",true);
     }
     
-    
+    public void FadeOutGame()
+    {
+        _animator.SetBool("FadeIn",false);
+    }
 }

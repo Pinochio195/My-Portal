@@ -116,7 +116,7 @@ public class PlayerController : BasePlayerController, ICollidable
 
     private void DirectionFire()
     {
-        if (Input.GetMouseButtonDown(0)&& (Time.time - _playerFire.lastFireTime) >= _playerFire.fireCooldown)
+        if (Input.GetMouseButtonDown(0) && (Time.time - _playerFire.lastFireTime) >= _playerFire.fireCooldown)
         {
             Vector2 mousePosition = Input.mousePosition;
             mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
@@ -157,7 +157,10 @@ public class PlayerController : BasePlayerController, ICollidable
         Vector2 fireDirection = ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) -
                                  (Vector2)_playerFire._firePosition.position).normalized;
         //spam ball
-        _playerFire._ballFireGameObject = LeanPool.Spawn((_playerFire._typeBall == Player_Fire.TypeBall.Blue?_playerFire._prefabs_Blue_BallFire:_playerFire._prefabs_Red_BallFire),
+        _playerFire._ballFireGameObject = LeanPool.Spawn(
+            (_playerFire._typeBall == Player_Fire.TypeBall.Blue
+                ? _playerFire._prefabs_Blue_BallFire
+                : _playerFire._prefabs_Red_BallFire),
             _playerFire._firePosition.position, Quaternion.identity);
         //fire ball
         _playerFire._ballFireGameObject.GetComponent<Rigidbody2D>().velocity =
@@ -172,6 +175,7 @@ public class PlayerController : BasePlayerController, ICollidable
         // Đăng ký callback khi animation bắn kết thúc
         _playerComponent._skeletonAnimation.AnimationState.Complete += OnFireAnimationComplete;
     }
+
     private void OnFireAnimationComplete(TrackEntry trackEntry)
     {
         // Hủy đăng ký callback và chuyển sang animation Idle
@@ -179,6 +183,7 @@ public class PlayerController : BasePlayerController, ICollidable
         _playerComponent._skeletonAnimation.AnimationState.SetAnimation(0, "Idle_1", true);
         _playerComponent._skeletonAnimation.Skeleton.SetToSetupPose();
     }
+
     #region Move Player
 
     protected override void PlayerMove()
@@ -210,10 +215,15 @@ public class PlayerController : BasePlayerController, ICollidable
 
     public void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground")|| collision.gameObject.CompareTag("WallPortal"))
+        if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("WallPortal"))
         {
-            if (_playerComponent._rigidbody.velocity.y == 0)
+            Debug.Log(1);
+            Debug.Log(PortalManager.Instance._portalSpawn._forcePlayer);
+            float velocityThreshold = 0.0001f;
+
+            if (Mathf.Abs(_playerComponent._rigidbody.velocity.y) < velocityThreshold)
             {
+                Debug.Log("Get it");
                 PortalManager.Instance._portalSpawn._forcePlayer = 0;
                 PortalManager.Instance._portalSpawn.isCheckingMoveWhenTele = true;
             }
@@ -222,14 +232,23 @@ public class PlayerController : BasePlayerController, ICollidable
 
     public void OnCollisionExit2D(Collision2D collision)
     {
-        
     }
 
     public void OnTriggerEnter2D(Collider2D other)
     {
+        if (other.CompareTag("Portal"))
+        {
+            Debug.Log(2);
+            _playerComponent._collider.isTrigger = true;
+        }
     }
 
     public void OnTriggerExit2D(Collider2D other)
     {
+        if (other.CompareTag("Portal"))
+        {
+            Debug.Log(3);
+            _playerComponent._collider.isTrigger = false;
+        }
     }
 }
